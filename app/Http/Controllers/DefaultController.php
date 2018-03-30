@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Leafo\ScssPhp\Compiler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class DefaultController extends Controller {
 
@@ -36,10 +38,8 @@ class DefaultController extends Controller {
             $scss = new Compiler;
             $scss->addImportPath('../git');
             $css = '';
-
-
             if($dark)
-                $css .= $scss->compile('@import nachtmodus/nachtmodus');
+                $css .= $scss->compile('@include nachtmodus/nachtmodus');
 
             Storage::disk('local')->put($uri, $css);
         }
@@ -47,10 +47,16 @@ class DefaultController extends Controller {
     }
 
     public function update(Request $request) {
-        $secret = $request->header('Authorization');
+        $header = $request->header('X-Hub-Signature');
+        if(strpos($header,'=') === false)
+            throw new BadRequestHttpException('Please provide signature');
+        list($algo, $signature) = explode('=',$header);
+        if($algo != 'sha1') {
+            throw new BadRequestHttpException('Alorithm must be sha1');
+        }
+        $payloadHash = hash_hmac($algo,$request->getContent(),env('UPDATE_SECRET'));
 
-        $secret = $request->input('secret',null);
-        if(true) { //TODO: secret validatie
+        if($payloadHash === $signature) {
             $result = array();
             foreach ($this->repositories as $name=>$repository) {
                 exec('git -C "../git/'.$name.'nachtmodus" pull '. $repository['uri'], $result);
@@ -65,7 +71,7 @@ class DefaultController extends Controller {
             }
 
         } else
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedHttpException('Invalid signature');
     }
 
 

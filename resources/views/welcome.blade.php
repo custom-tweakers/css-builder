@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Tweakers custum CSS Generator</title>
+        <title>Tweakers custom CSS Generator</title>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -26,24 +26,27 @@
     <div id="app" class="container">
         <div id="main" class="jumbotron">
             <h1>Tweakers custom CSS generator</h1>
-
-
-            <form v-on:submit="generate">
+            <form>
                 <div class="form-check">
-                    <input type="checkbox" v-model="onlyDarkMode" class="form-check-input" id="input-dark-mode">
+                    <input type="checkbox" v-model="darkMode" class="form-check-input" id="input-dark-mode">
                     <label for="input-dark-mode">Nachtmodus</label>
                 </div>
-                <div class="form-check" v-if="onlyDarkMode">
-                    <input type="checkbox" v-model="locationBased" class="form-check-input" id="input-dark-mode" disabled>
-                    <label for="input-dark-mode">Alleen als het donker is</label>
-                </div>
-                <div class="form-group" v-if="onlyDarkMode && locationBased">
-                    <label for="latitude">Breedtegraad</label>
-                    <input type="text" id="latitude"  disabled>
-                </div>
-                <div class="form-group" v-if="onlyDarkMode && locationBased">
-                    <label for="longitude">Lengtegraad</label>
-                    <input type="text" id="longitude"  disabled>
+                <div class="ml-3">
+                    <div class="form-check" v-if="darkMode">
+                        <input type="checkbox" v-model="onlyNight" class="form-check-input" id="input-dark-mode">
+                        <label for="input-dark-mode">Alleen als het donker is</label>
+                    </div>
+                    <div class="ml-3">
+                        <div class="form-group" v-if="darkMode && onlyNight">
+                            <label for="latitude">Breedtegraad</label>
+                            <input type="number" step="any" min="-90" max="90" id="latitude" v-model="latitude">
+                        </div>
+                        <div class="form-group" v-if="darkMode && onlyNight">
+                            <label for="longitude">Lengtegraad</label>
+                            <input type="number" step="any" min="-180" max="180" id="longitude" v-model="longitude">
+                        </div>
+                        <div class="btn btn-primary" v-if="onlyNight" v-on:click="location">Verkrijg locatie</div>
+                    </div>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="input-dark-mode"  disabled>
@@ -58,9 +61,12 @@
                     <label for="input-dark-mode">Extra compact</label>
                 </div>
 
-
-                <input type="submit" class="btn btn-primary" value="Genereer CSS"></input>
             </form>
+<br><hr><br>
+            <p>Kopiëer de volgende url naar je custom CSS:</p>
+            <div class="card">
+                <div class="card-body"><code>@@import url("{{url('/stylesheet')}}@{{urlParameters}}");</code></div>
+            </div>
         </div>
 
 

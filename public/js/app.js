@@ -13887,11 +13887,43 @@ Vue.component('example-component', __webpack_require__(39));
 var app = new Vue({
     el: '#app',
     data: {
-        onlyDarkMode: false,
-        locationBased: false
+        darkMode: null,
+        onlyNight: null,
+        latitude: null,
+        longitude: null
     },
     methods: {
-        generate: function generate(event) {}
+        location: function location(event) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                this.latitude = position.coords.latitude;
+                this.longitude = position.coords.longitude;
+            });
+        }
+    },
+    computed: {
+        urlParameters: function urlParameters() {
+            var response = '';
+            if (this.darkMode !== null) response += '?darkMode=' + (this.darkMode ? '1' : '0');
+            if (this.onlyNight !== null) response += '&onlyNight=' + (this.onlyNight ? '1' : '0');
+            if (this.latitude !== null) response += '&latitude=' + this.latitude;
+            if (this.longitude !== null) response += '&longitude=' + this.longitude;
+            console.log(response);
+            return response;
+        }
+
+    },
+    watch: {
+        darkMode: function darkMode() {
+            if (this.darkMode === false) {
+                this.onlyNight = null;
+            }
+        },
+        onlyNight: function onlyNight() {
+            if (this.onlyNight === false || this.onlyNight === null) {
+                this.latitude = null;
+                this.longitude = null;
+            }
+        }
     }
 });
 
