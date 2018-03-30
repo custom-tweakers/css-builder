@@ -28,8 +28,13 @@ class DefaultController extends Controller {
         $latitude = (float)$request->input('latitude', 52.282338);
         $longitude = (float)$request->input('longitude', 5.638759);
 
-        //is dark mode enabled?
-        $dark = ($darkMode)?(($onlyNight)?(date_sunrise(time(),null,$latitude,$longitude) < time() && time() < date_sunset(time(),null,$latitude,$longitude)):true):false;
+
+        //TODO: shorter
+        $sunrise = date_sunrise(time(),SUNFUNCS_RET_TIMESTAMP,$latitude,$longitude);
+        $sunset = date_sunset(time(),SUNFUNCS_RET_TIMESTAMP,$latitude,$longitude);
+        $time = time();
+        $night = !((date('His',$sunrise)<date('His',$sunset))?(date('His',$sunrise)<$time && date('His',$sunset)>$time):(date('His',$sunrise)<$time && date('His',$sunset)<$time));
+        $dark = ($darkMode)?(($onlyNight)?$night:true):false;
 
 
         $hash = md5($dark);
