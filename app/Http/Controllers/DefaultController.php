@@ -39,7 +39,7 @@ class DefaultController extends Controller {
             $scss->addImportPath('../git');
             $css = '';
             if($dark)
-                $css .= $scss->compile('@include nachtmodus/nachtmodus');
+                $css .= $scss->compile('@import nachtmodus/nachtmodus');
 
             Storage::disk('local')->put($uri, $css);
         }
