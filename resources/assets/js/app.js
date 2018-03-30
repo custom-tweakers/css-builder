@@ -27,10 +27,11 @@ const app = new Vue({
     },
     methods: {
         location: function(event) {
+
             navigator.geolocation.getCurrentPosition(function(position) {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;
-            })
+            });
         }
     },
     computed: {
@@ -44,7 +45,6 @@ const app = new Vue({
                 response += '&latitude='+(this.latitude);
             if(this.longitude !== null)
                 response += '&longitude='+(this.longitude);
-            console.log(response);
             return response;
         }
         
