@@ -1,0 +1,102 @@
+<!doctype html>
+<!-- gemaakt door Han van der Veen -->
+<html ng-app="project">
+	<head>
+		<script src="angular.min.js"></script>
+		<script src="underscore.min.js"></script>
+		<script src="vote.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="vote.css">
+		<script>
+            if('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .register('sw.js')
+                    .then(function() { console.log("Service Worker Registered"); });
+            }
+		</script>
+	</head>
+	<body>
+		<div id="wrapper" ng-controller="Vote">
+
+
+			<div id="legend">
+				<div class="legend">
+					<div class="leg">
+						<span class="block color_black"></span>
+						<span>Kiesdeler ({{threshold}})</span>
+					</div>
+					<div class="leg">
+						<span class="block color_white"></span>
+						<span>Blanco ({{blanco}})</span>
+					</div>
+					<div class="leg">
+						<span class="block color_white"></span>
+						<span>Ongeldig ({{invalid}})</span>
+					</div>
+					<div class="leg" ng-repeat="opt in options">
+						<span class="block color_{{$index}}"></span>
+						<span>{{opt.name}} ({{opt.count}})</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="graph" ng-if="start">
+				<h1>{{title}}</h1>
+				<div class="graph">
+
+
+
+					<div class="bar color_{{$index}}" ng-style="wh(opt)" ng-repeat="opt in options">
+						{{opt.count}}<br />
+						<div>
+							<div class="option-name">{{opt.name}}</div>
+						</div>
+					</div>
+					
+					<div class="line" ng-style="voteDiv()"></div>
+					
+				</div>
+				
+			</div>
+			
+			<div id="vote" ng-if="start">
+				<span ng-repeat="opt in options">
+					<a href="" class="button" ng-click="vote(opt)">{{opt.name}}</a>
+				</span>
+				<a href="" class="button" ng-click="addBlanco()">Blanco</a>
+				<a href="" class="button" ng-click="addInvalid()">Ongeldig</a>
+				<a href="" class="button" ng-click="revert()">Herstel</a>
+			</div>
+			
+			<div id="options">
+				<h2>Opties <a href="" class="small" ng-click="hide.options = !!!hide.options">(hide)</a></h2>
+				<div ng-show="!hide.options">
+					
+					<h3>Instellingen</h3>
+					<p>
+						<label>Titel</label> <input type="text" ng-model="title" placeholder="Titel van de stemming">
+					</p>
+					<p>
+						<label>Uitkomst aantal</label> <input type="text" ng-model="validOptions" placeholder="Aantal opties">
+					</p>
+					
+					<p><a href="" class="button" ng-click="start = true">Start!</a></p>
+					<p><a href="" class="button" ng-click="resetCount()">Reset stemmen</a></p>
+					<h3>Opties</h3>
+					<ul>
+						<li ng-repeat="opt in options">{{opt.name}} ({{opt.count}}) <a href="" ng-click="removeOption(opt)">[x]</a></li>
+					</ul>
+					<form ng-submit="saveOption()">
+						<input type="text" ng-model="option.name" placeholder="Uw optie" required>
+						<input type="submit" value="Save">
+					</form>
+					
+				</div>
+			</div>
+
+			<div id="thanks">
+				Met dank aan <a href="https://github.com/haneev/vgst_voter">Han van der Veen</a>
+			</div>
+			
+		</div>
+	</body>
+</html>
