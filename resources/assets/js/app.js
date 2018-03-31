@@ -24,12 +24,31 @@ const app = new Vue({
         onlyNight: null,
         latitude: null,
         longitude: null,
+        error: false,
+        errorMessage: null,
     },
     methods: {
         location: function(event) {
             navigator.geolocation.getCurrentPosition(_.bind(function(position) {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;
+            },this),_.bind(function (error) {
+                this.error = true;
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        this.errorMessage = "Toegang tot locatie geweigerd."
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        this.errorMessage = "Locatie is niet beschikbaar"
+                        break;
+                    case error.TIMEOUT:
+                        this.errorMessage = "Time-out bij ophalen locatie"
+                        break;
+                    case error.UNKNOWN_ERROR:
+                    default:
+                        this.errorMessage = "Onbekende fout"
+                        break;
+                }
             },this));
         }
     },

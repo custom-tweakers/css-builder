@@ -46,6 +46,12 @@
                             <input type="number" step="any" min="-180" max="180" id="longitude" v-model="longitude">
                         </div>
                         <div class="btn btn-primary" v-if="onlyNight" v-on:click="location">Verkrijg locatie</div>
+                        <div id="error" class="alert alert-danger alert-dismissible fade show mt-4" role="alert" v-if="error">
+                            <span id="errorMessage">@{{errorMessage}}</span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-check">
@@ -61,6 +67,9 @@
                     <label for="input-dark-mode">Extra compact</label>
                 </div>
 
+            </form>
+            <form action="/update" method="post">
+                <button>hoi</button>
             </form>
 <br><hr><br>
             <p>Kopiëer de volgende url naar je custom CSS:</p>

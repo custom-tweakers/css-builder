@@ -33,7 +33,9 @@ class DefaultController extends Controller {
         $sunrise = date_sunrise(time(),SUNFUNCS_RET_TIMESTAMP,$latitude,$longitude);
         $sunset = date_sunset(time(),SUNFUNCS_RET_TIMESTAMP,$latitude,$longitude);
         $time = time();
-        $night = !((date('His',$sunrise)<date('His',$sunset))?(date('His',$sunrise)<$time && date('His',$sunset)>$time):(date('His',$sunrise)<$time && date('His',$sunset)<$time));
+        $night = !((date('His',$sunrise)<date('His',$sunset))
+            ?(date('His',$sunrise) < date('His',$time) && date('His',$sunset) > date('His',$time))
+            :(date('His',$sunrise) < date('His',$time) && date('His',$sunset) < date('His',$time)));
         $dark = ($darkMode)?(($onlyNight)?$night:true):false;
 
 
@@ -64,7 +66,7 @@ class DefaultController extends Controller {
         if($payloadHash === $signature) {
             $result = array();
             foreach ($this->repositories as $name=>$repository) {
-                exec('git -C "../git/'.$name.'nachtmodus" pull '. $repository['uri'], $result);
+                exec('git -C "../git/'.$name.'" pull '. $repository['uri'], $result);
             }
 
 
@@ -75,6 +77,7 @@ class DefaultController extends Controller {
                     unlink($file); // delete file
             }
 
+            return response('',204);
         } else
             throw new AccessDeniedHttpException('Invalid signature');
     }
