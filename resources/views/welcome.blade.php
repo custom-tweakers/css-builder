@@ -68,9 +68,7 @@
                 </div>
 
             </form>
-            <form action="/update" method="post">
-                <button>hoi</button>
-            </form>
+
 <br><hr><br>
             <p>Kopiëer de volgende url naar je custom CSS:</p>
             <div class="card">
