@@ -20,6 +20,10 @@
             #promo {
                 text-align: center;
             }
+
+            #error {
+                display: none;
+            }
         </style>
     </head>
     <body >
