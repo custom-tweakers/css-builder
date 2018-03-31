@@ -47,7 +47,7 @@
                         </div>
                         <div class="btn btn-primary" v-if="onlyNight" v-on:click="location">Verkrijg locatie</div>
                         <div id="error" class="alert alert-danger alert-dismissible fade show mt-4" role="alert" v-if="error">
-                            <span id="errorMessage">@{{errorMessage}}</span>
+                            @verbatim<span id="errorMessage">{{  errorMessage }}</span>@endverbatim
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
