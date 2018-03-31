@@ -69,10 +69,9 @@ class DefaultController extends Controller {
             foreach ($this->repositories as $name=>$repository) {
                 exec('git -C "../git/'.$name.'" pull '. $repository['uri'], $result);
             }
-            
+
             //remove all cached files
-            $file = new Filesystem();
-            $toDelete = $file->allFiles('storage/app',false);
+            $toDelete = Storage::allFiles('',false);
             foreach ($toDelete as $item)
                 Storage::delete($item);
 
