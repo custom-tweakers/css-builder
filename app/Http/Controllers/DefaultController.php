@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Leafo\ScssPhp\Compiler;
@@ -12,7 +13,7 @@ class DefaultController extends Controller {
     public $repositories = [
       'nachtmodus' =>
           [
-              'uri' => 'https://github.com/custom-tweakers/nachtmodus.git',
+                  'uri' => 'https://github.com/custom-tweakers/nachtmodus.git',
               'stylesheets' => ['nachtmodus.scss']
           ]
     ];
@@ -68,14 +69,12 @@ class DefaultController extends Controller {
             foreach ($this->repositories as $name=>$repository) {
                 exec('git -C "../git/'.$name.'" pull '. $repository['uri'], $result);
             }
-
-
+            
             //remove all cached files
-            $files = glob('../public/tweakers-css/*'); // get all file names
-            foreach($files as $file){ // iterate files
-                if(is_file($file))
-                    unlink($file); // delete file
-            }
+            $file = new Filesystem();
+            $toDelete = $file->allFiles('storage/app',false);
+            foreach ($toDelete as $item)
+                Storage::delete($item);
 
             return response('',204);
         } else
